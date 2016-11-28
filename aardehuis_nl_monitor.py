@@ -117,18 +117,18 @@ def readP1(stop_event ):
 			telegram_line = ser.readline()
 
 			# Check if it matches the start line (/ at start)
-			if re.match(b'(?=/)', telegram_line):
-				telegram = telegram + telegram_line
+			if telegram_line[:1] == '/':
+				telegram += telegram_line
 				logger.debug('Found start!')
-				while not checksum_found:
+				if not checksum_found:
 					telegram_line = ser.readline()
 					# Check if it matches the checksum line (! at start)
-					if re.match(b'(?=!)', telegram_line):
-						telegram = telegram + telegram_line
+					if  telegram_line[:1] == '!':
+						telegram += telegram_line
 						logger.debug('Found checksum!')
 						checksum_found = True
 					else:
-						telegram = telegram + telegram_line
+						telegram += telegram_line
 
 		# print telegram
 
