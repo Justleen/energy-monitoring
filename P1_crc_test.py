@@ -61,6 +61,18 @@ class P1():
 		seconds	= timestamp[10:12] 
 		return datetime(*map(int,( year, month, day, hour, minutes, seconds ) )).strftime('%s')  # epoch	
 
+
+def main():
+	P1tele  =   P1()
+
+	P1tele.readTelegram()
+	P1tele.checkCRC
+
+
+if __name__ == '__main__': 
+	main()
+
+
 '''
 class sdm120():
 
@@ -78,3 +90,5 @@ class httpPOST():
 
 
 
+
+'''
