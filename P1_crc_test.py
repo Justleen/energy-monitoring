@@ -69,3 +69,24 @@ def main():
 
 if __name__ == '__main__': 
 	main()
+
+
+'''
+class sdm120():
+
+	def readSDM():
+
+	def postSDM():
+		
+
+class httpPOST():
+
+
+
+
+# init COM port
+
+
+
+
+'''
