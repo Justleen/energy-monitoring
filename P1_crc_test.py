@@ -7,16 +7,15 @@ import serial, sys, re
 class P1():
 	def __init__():
 		self.crc16 = crcmod.predefined.mkPredefinedCrcFun('crc16')
-		ser          = serial.Serial()
-		ser.baudrate = 115200
-		ser.timeout  = 8
-		ser.port     = '/dev/ttyUSB0'
-		ser.open()
+		self.ser          = serial.Serial()
+		self.ser.baudrate = 115200
+		self.ser.timeout  = 8
+		self.ser.port     = '/dev/ttyUSB0'
+		self.ser.open()
+        self.telegram = ''
+        self checksum_found = False
+        self.good_checksum =  False
 	def readTelegram():
-		while True:
-	        self.telegram = ''
-	        checksum_found = False
-
         while not checksum_found:
                 # Read in a line
                 telegram_line = ser.readline()
@@ -25,19 +24,18 @@ class P1():
                 if telegram_line[0] == "/":
                         self.telegram += telegram_line
                         print('Found start!')
-                        while not checksum_found:
+                        if  not self.checksum_found:
                                 telegram_line = ser.readline()
                                 # Check if it matches the checksum line (! at start)
                                 if telegram_line[0] == "!":
                                         self.telegram += telegram_line
                                         print('Found checksum!')
-                                        checksum_found = True
+                                        self.checksum_found = True
                                 else:
                                         self.telegram += telegram_line
 
 
 	def checkCRC():
-        good_checksum =  False
         for m in pattern.finditer(self.telegram):
                 # Remove the exclamation mark from the checksum,
                 # and make an integer out of it.
@@ -45,8 +43,8 @@ class P1():
                 # The exclamation mark is also part of the text to be CRC16'd
                 calculated_checksum = crc16(self.telegram[:m.end() + 1])
                 if given_checksum == calculated_checksum:
-                        good_checksum = True
-                if good_checksum:
+                        self.good_checksum = True
+                if self.good_checksum:
                         print("Good checksum!")
                 else:
                         print("No Good, next!")
@@ -66,7 +64,7 @@ def main():
 	P1tele  =   P1()
 
 	P1tele.readTelegram()
-	P1tele.checkCRC
+	P1tele.checkCRC()
 
 
 if __name__ == '__main__': 
