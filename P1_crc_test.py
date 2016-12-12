@@ -14,8 +14,8 @@ class P1():
 		ser.open()
 	def readTelegram():
 		while True:
-        self.telegram = ''
-        checksum_found = False
+	        self.telegram = ''
+	        checksum_found = False
 
         while not checksum_found:
                 # Read in a line
@@ -71,24 +71,3 @@ def main():
 
 if __name__ == '__main__': 
 	main()
-
-
-'''
-class sdm120():
-
-	def readSDM():
-
-	def postSDM():
-		
-
-class httpPOST():
-
-
-
-
-# init COM port
-
-
-
-
-'''
