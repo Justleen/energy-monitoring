@@ -10,7 +10,7 @@ class P1():
 		self.ser          = serial.Serial()
 		self.ser.baudrate = 115200
 		self.ser.timeout  = 8
-		self.ser.port     = '/dev/ttyUSB0'
+		self.ser.port     = '/dev/ttyAMA0'
 		self.ser.open()
         self.telegram = ''
         self checksum_found = False

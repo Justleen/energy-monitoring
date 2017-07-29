@@ -99,86 +99,86 @@ options = {
 }
 regex = re.compile(r'[^0-9]*$')  # remove non-digits at the end
 
+
 def readP1(stop_event ):
-	logging.info( 'Starting %s' % currentThread().getName())
-	''' read P1, collect values from p1 telegram, return values ''' 
-	#set meterid/id
+        logging.info( 'Starting %s' % currentThread().getName())
+        ''' read P1, collect values from p1 telegram, return values '''
+        #set meterid/id
 
-	while stop_event.is_set():
-		logger.info("reading P1")
-		tagStack = options.keys()
-		ret = {}
+        while stop_event.is_set():
+                logger.info("reading P1")
+                tagStack = options.keys()
+                ret = {}
 
-		telegram = ''
-		checksum_found = False
+                telegram = ''
+                checksum_found = False
 
-		while not checksum_found:
-			# Read in a line
-			telegram_line = ser.readline()
+                while not checksum_found:
+                        # Read in a line
+                        telegram_line = ser.readline()
 
-			# Check if it matches the start line (/ at start)
-			if telegram_line[:1] == '/':
-				telegram += telegram_line
-				logger.debug('Found start!')
-				if not checksum_found:
-					telegram_line = ser.readline()
-					# Check if it matches the checksum line (! at start)
-					if  telegram_line[:1] == '!':
-						telegram += telegram_line
-						logger.debug('Found checksum!')
-						checksum_found = True
-					else:
-						telegram += telegram_line
+                        # Check if it matches the start line (/ at start)
+                        if re.match(b'(?=/)', telegram_line):
+                                telegram = telegram + telegram_line
+                                logger.debug('Found start!')
+                                while not checksum_found:
+                                        telegram_line = ser.readline()
+                                        # Check if it matches the checksum line (! at start)
+                                        if re.match(b'(?=!)', telegram_line):
+                                                telegram = telegram + telegram_line
+                                                logger.debug('Found checksum!')
+                                                checksum_found = True
+                                        else:
+                                                telegram = telegram + telegram_line
 
-		# print telegram
+                # print telegram
 
-		# We have a complete telegram, now we can process it.
-		# Look for the checksum in the telegram
-		good_checksum =  False
-		for m in pattern.finditer(telegram):
-			# Remove the exclamation mark from the checksum,
-			# and make an integer out of it.
-			given_checksum = int('0x' + telegram[m.end() + 1:].decode('ascii'), 16)
-			# The exclamation mark is also part of the text to be CRC16'd
-			calculated_checksum = crc16(telegram[:m.end() + 1])
-			if given_checksum == calculated_checksum:
-				good_checksum = True
-			
-			if good_checksum:
-				logger.info("Good checksum!")
-	
-				try: 
-					while tagStack:
-					
-						for raw in telegram.split(b'\r\n'):
+                # We have a complete telegram, now we can process it.
+                # Look for the checksum in the telegram
+                good_checksum =  False
+                for m in pattern.finditer(telegram):
+                        # Remove the exclamation mark from the checksum,
+                        # and make an integer out of it.
+                        given_checksum = int('0x' + telegram[m.end() + 1:].decode('ascii'), 16)
+                        # The exclamation mark is also part of the text to be CRC16'd
+                        calculated_checksum = crc16(telegram[:m.end() + 1])
+                        if given_checksum == calculated_checksum:
+                                good_checksum = True
 
-							#logging.debug('raw telegram: {}'.format(raw))
+                        if good_checksum:
+                                logger.info("Good checksum!")
+                                #PostServer(telegram)
+                                try:
+                                        while tagStack:
+                                                for raw in telegram.split(b'\r\n'):
 
-							tag = raw.split('(')[0]
-				
-							if tag in options.keys():
-								value = re.sub(regex, '', raw.split('(')[1])
-								logger.debug("found tag: {} value: {}".format(tag,value) )
-				
-								if tag == '0-0:96.1.1':
-									ret[options[tag]] = str(value).decode('hex')
-									# set globel meterID
-									global meterID
-									meterID = ret[options[tag]]
-								elif tag == '0-0:1.0.0':
-									ret[options[tag]] = tijdomvormer(value)
-								else:
-									ret[options[tag]] = value 
+                                                        #logging.debug('raw telegram: {}'.format(raw))
+                                                        tag = raw.split('(')[0]
 
-								tagStack.remove(tag)
-					
-					logger.debug('P1 return value: {}'.format(ret))
-					postP1( ret, stop_event )
-				except:
-					logger.debug('P1 read error')
+                                                        if tag in options.keys():
+                                                                value = re.sub(regex, '', raw.split('(')[1])
+                                                                logger.debug("found tag: {} value: {}".format(tag,value) )
 
-			else:
-				logger.info("No Good, next!")
+                                                                if tag == '0-0:96.1.1':
+                                                                        ret[options[tag]] = str(value).decode('hex')
+                                                                        # set globel meterID
+                                                                        global meterID
+                                                                        meterID = ret[options[tag]]
+                                                                elif tag == '0-0:1.0.0':
+                                                                        ret[options[tag]] = tijdomvormer(value)
+                                                                else:
+                                                                        ret[options[tag]] = value
+
+                                                                tagStack.remove(tag)
+
+                                        logger.debug('P1 return value: {}'.format(ret))
+                                        postP1( ret, stop_event )
+                                except:
+                                        logger.debug('P1 read error')
+
+                        else:
+                                logger.info("No Good, next!")
+
 
 def postP1(values, stop_event):
 	'''
@@ -318,11 +318,11 @@ def main():
 	pill2kill = Event()
 	pill2kill.set()
 	P1reader = Thread(name='P1reader', target=readP1, args=(pill2kill, ))
-	rs485reader = Thread(name='rs485reader', target=readRS485, args=(pill2kill, ))
+	#rs485reader = Thread(name='rs485reader', target=readRS485, args=(pill2kill, ))
 	#P1reader.setDaemon = True
 	P1reader.start()
 
-	rs485reader.start()
+	#rs485reader.start()
 	#GPIO.add_event_detect(24, GPIO.RISING, callback=waterMeter, bouncetime=1000)  # water meter
 	try:
 		while 1:
