@@ -1,5 +1,7 @@
 from smeterd.meter import SmartMeter
 from influx.influxpost import post
+import logging 
+log = logging.getLogger(__name__)
 
 
 meter = SmartMeter('/dev/ttyAMA0', baudrate=115200)
