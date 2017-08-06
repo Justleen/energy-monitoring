@@ -3,9 +3,9 @@ from influx.influxpost import post
 import logging 
 log = logging.getLogger(__name__)
 
-
+log.info('Starting up!')
 meter = SmartMeter('/dev/ttyAMA0', baudrate=115200)
-
+log
 
 while True:
 	packet = meter.read_one_packet()
