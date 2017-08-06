@@ -1,11 +1,23 @@
 from smeterd.meter import SmartMeter
 from influx.influxpost import post
 import logging 
-log = logging.getLogger(__name__)
+logging.info('Starting up!')
 
-log.info('Starting up!')
+
+
+# create logger with 'spam_application'
+log = logging.getLogger(__name__)
+log.setLevel(logging.DEBUG)
+
+# create console handler with a higher log level
+ch = logging.StreamHandler()
+ch.setLevel(logging.DEBUG)
+
+
+log.addHandler(ch)
+log.info('creating an instance of log')
+
 meter = SmartMeter('/dev/ttyAMA0', baudrate=115200)
-log
 
 while True:
 	packet = meter.read_one_packet()
