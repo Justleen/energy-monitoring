@@ -1,5 +1,7 @@
 from smeterd.meter import SmartMeter
 from influx.influxpost import post
+from rs485.rs485 import rsReader
+
 import logging 
 logging.info('Starting up!')
 
@@ -18,6 +20,7 @@ log.addHandler(ch)
 log.info('creating an instance of log')
 
 meter = SmartMeter('/dev/ttyAMA0', baudrate=115200)
+solar = rsReader()
 
 while True:
 	packet = meter.read_one_packet()
@@ -45,3 +48,4 @@ while True:
 
 	poster = post()
 	poster.httpsPost(body)
+	poster.httpsPost(solar.readRS485())
