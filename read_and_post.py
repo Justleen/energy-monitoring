@@ -1,11 +1,11 @@
-from smeterd.meter import SmartMeter
+from smeterd.meter import SmartMeter,P1PacketError
 from influx.influxpost import post
 from rs485.rs485 import rsReader
 
 import logging 
+import sys,getopt
 
-
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 log = logging.getLogger(__name__)
 log.info('Starting..')
 
@@ -13,10 +13,7 @@ log.info('Starting..')
 meter = SmartMeter('/dev/ttyAMA0', baudrate=115200)
 solar = rsReader()
 
-class P1PacketError(Exception):
-    pass
-
-def passPacketOn(packet):
+def passPacketOn(packet, poster):
 	eqid = str(packet['kwh']['eid']).decode('hex')
 	tariff = packet['kwh']['tariff']
 
@@ -41,12 +38,31 @@ def passPacketOn(packet):
 
 	poster.httpsPost(body)
 
-while True:
-	poster = post()
+def run(password):
+	poster = post(password)
 	try:
 		packet = meter.read_one_packet()
-		passPacketOn(packet)
+		passPacketOn(packet, poster)
 	except P1PacketError:
+		log.info('invalid checksum, pass')
 		pass
 
 	poster.httpsPost(solar.readRS485())
+
+def main(argv):
+	try:
+		opts, args = getopt.getopt(argv,"hi:o:",["password="])
+	except getopt.GetoptError:
+		print 'test.py -p  --password <password>'
+		sys.exit(2)
+	for opt, arg in opts:
+		if opt == '-h':
+			print 'test.py -p  --password <password>'
+         		sys.exit()
+		elif opt in ("-p", "--password"):
+       			password = arg
+	while True:
+		run(password)
+
+if __name__ == "__main__":
+   main(sys.argv[1:])

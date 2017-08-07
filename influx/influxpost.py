@@ -2,10 +2,10 @@ import ssl
 from httplib import HTTPSConnection
 
 class post(object):
-	def __init__(self):
+	def __init__(self, password):
 		self.host 		= 'monitoring.aardehuis.nl'
 		self.port 		= 8086
-		self.wachtwoord 	= 'Sk1nnyp1nkelephant'
+		self.wachtwoord 	= password
 		self.username	= 'leen'
 		self.dbname 		= 'db_name'
 		self.context = ssl._create_unverified_context()
