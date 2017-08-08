@@ -14,6 +14,7 @@ rs485.serial.timeout = 5
 
 class rsReader(object):
 	def readRS485(self):
+		bodyTemplate_solar = 'emeter_solar,eqid={eqid},type={type} value={value}\n'
 		''' read DSM120 powermeter over rs485 '''
 		ret = {}
 		try:
@@ -26,11 +27,8 @@ class rsReader(object):
 			ret['sol_pow'] = float(Activepower)
 			ret['sol_nrg'] = float(TotalPower)
 
-		# solar power / energy, pass if not both there
-		bodyTemplate_solar = 'emeter_solar,eqid={eqid},type={type} value={value}\n'
 
-		self.body  = bodyTemplate_solar.format(eqid='E0005001501964013',type='cumulative', value=ret['sol_nrg'])
-		self.body += bodyTemplate_solar.format(eqid='E0005001501964013',type='instant', value=ret['sol_pow'])
+			self.body  = bodyTemplate_solar.format(eqid='E0005001501964013',type='cumulative', value=ret['sol_nrg'])
+			self.body += bodyTemplate_solar.format(eqid='E0005001501964013',type='instant', value=ret['sol_pow'])
 
-		#print body
 		return self.body

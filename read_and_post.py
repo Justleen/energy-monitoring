@@ -49,6 +49,8 @@ def run(password):
 
 	poster.httpsPost(solar.readRS485())
 
+
+
 def main(argv):
 	try:
 		opts, args = getopt.getopt(argv,"hi:o:",["password="])
