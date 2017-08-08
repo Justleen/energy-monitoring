@@ -11,7 +11,6 @@ rs485.serial.stopbits = 1
 rs485.serial.timeout = 5
 
 
-
 class rsReader(object):
 	def readRS485(self):
 		bodyTemplate_solar = 'emeter_solar,eqid={eqid},type={type} value={value}\n'

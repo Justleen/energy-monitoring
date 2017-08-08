@@ -1,5 +1,10 @@
 import ssl
 from httplib import HTTPSConnection
+import logging
+
+
+
+log = logging.getLogger(__name__)
 
 class post(object):
 	def __init__(self, password):
