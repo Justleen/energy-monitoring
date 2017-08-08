@@ -16,4 +16,6 @@ class post(object):
 		conn = HTTPSConnection(self.host,self.port,context=self.context)
 		#conn.set_debuglevel(1)
 		conn.request('POST', '/write?db={db}&u={user}&p={password}'.format(db=self.dbname, user=self.username, password=self.wachtwoord), body, self.headers) 
+		response = conn.getresponse()
+		log.info('Updated Influx. HTTP response {}'.format(response.status))
 		conn.close()
