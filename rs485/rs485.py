@@ -1,4 +1,8 @@
 import minimalmodbus #rs485
+import logging
+
+log = logging.getLogger(__name__)
+
 
 #init rs485 
 rs485 = minimalmodbus.Instrument( '/dev/ttyUSB0', 1)
@@ -23,10 +27,10 @@ class rsReader(object):
 			print( 'Ooops, rs458 hickups %s' % err)
 			pass
 		else:
-			ret['sol_pow'] = float(Activepower)
-			ret['sol_nrg'] = float(TotalPower)
+			ret['sol_pow'] = abs(float(Activepower))
+			ret['sol_nrg'] = abs(float(TotalPower))
 
-
+			log.debug('Values read: %s and %s',  ret['sol_pow'] , ret['sol_nrg'] ) 
 			self.body  = bodyTemplate_solar.format(eqid='E0005001501964013',type='cumulative', value=ret['sol_nrg'])
 			self.body += bodyTemplate_solar.format(eqid='E0005001501964013',type='instant', value=ret['sol_pow'])
 
