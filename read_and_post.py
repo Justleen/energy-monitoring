@@ -21,10 +21,10 @@ def passPacketOn(packet, poster):
 	bodyTemplate_energy = 'emeter_energy,eqid='+ eqid +',tarif={tarif},direction={dir} value={value}\n'
 	bodyTemplate_power = 'emeter_power,eqid='+ eqid +',tarif={tarif},direction={dir},phase={phase} value={value}\n'
 
-	body += bodyTemplate_energy.format( dir='in', tarif='1', value=packet['kwh']['high']['consumed'] )
-	body += bodyTemplate_energy.format( dir='out', tarif='1', value=packet['kwh']['high']['produced'] )
-	body += bodyTemplate_energy.format( dir='in', tarif='2', value=packet['kwh']['low']['consumed'] )
-	body += bodyTemplate_energy.format( dir='out', tarif='2', value=packet['kwh']['low']['produced'] )
+	body += bodyTemplate_energy.format( dir='in', tarif='2', value=packet['kwh']['high']['consumed'] )
+	body += bodyTemplate_energy.format( dir='out', tarif='2', value=packet['kwh']['high']['produced'] )
+	body += bodyTemplate_energy.format( dir='in', tarif='1', value=packet['kwh']['low']['consumed'] )
+	body += bodyTemplate_energy.format( dir='out', tarif='1', value=packet['kwh']['low']['produced'] )
 
 	body += bodyTemplate_power.format( dir='in', tarif=tariff, phase='L1', value=packet['kwh']['current_consumed_phaseOne'] )
 	body += bodyTemplate_power.format( dir='in', tarif=tariff, phase='L2', value=packet['kwh']['current_consumed_phaseTwo'] )
