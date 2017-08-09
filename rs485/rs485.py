@@ -12,33 +12,33 @@ class rsReader(object):
 	'devicenumber': 1,
 	'baudrate': 9600,
 	'bytesize': 8,
-	'stopbits': 8,
+	'stopbits': 1,
 	'timeout': 5,
 	}
 
 	def __init__(self, **kwargs):
 		config = {}
-        config.update(self.defaults)
-        config.update(kwargs)
+       		config.update(self.defaults)
+        	config.update(kwargs)
 
 		#init rs485 
-		rs485 = minimalmodbus.Instrument( config['port'], config['devicenumber'])
-		rs485.mode =  minimalmodbus.MODE_RTU
-		rs485.serial.parity =  minimalmodbus.serial.PARITY_NONE
+		self.rs485 = minimalmodbus.Instrument( config['port'], config['devicenumber'])
+		self.rs485.mode =  minimalmodbus.MODE_RTU
+		self.rs485.serial.parity =  minimalmodbus.serial.PARITY_NONE
 		#rs485.debug = Config.get('rs485', 'debug')
-		rs485.serial.baudrate = config['baudrate']
-		rs485.serial.bytesize = config['bytesize']
-		rs485.serial.stopbits = config['stopbits']
-		rs485.serial.timeout = config['timeout']
+		self.rs485.serial.baudrate = config['baudrate']
+		self.rs485.serial.bytesize = config['bytesize']
+		self.rs485.serial.stopbits = config['stopbits']
+		self.rs485.serial.timeout = config['timeout']
 
 
-	def readRS485(self):
+	def readRS485(self ):
 		bodyTemplate_solar = 'emeter_solar,eqid={eqid},type={type} value={value}\n'
 		''' read DSM120 powermeter over rs485 '''
 		ret = {}
 		try:
-			Activepower =  rs485.read_float( 12, functioncode=4, numberOfRegisters=2)
-			TotalPower =  rs485.read_float( 342, functioncode=4, numberOfRegisters=2)
+			Activepower =  self.rs485.read_float( 12, functioncode=4, numberOfRegisters=2)
+			TotalPower =  self.rs485.read_float( 342, functioncode=4, numberOfRegisters=2)
 		except IOError as err:
 			print( 'Ooops, rs458 hickups %s' % err)
 			pass
