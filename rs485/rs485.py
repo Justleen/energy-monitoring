@@ -4,18 +4,34 @@ import logging
 log = logging.getLogger(__name__)
 
 
-#init rs485 
-rs485 = minimalmodbus.Instrument( '/dev/ttyUSB0', 1)
-rs485.mode =  minimalmodbus.MODE_RTU
-rs485.serial.parity =  minimalmodbus.serial.PARITY_NONE
-#rs485.debug = Config.get('rs485', 'debug')
-rs485.serial.baudrate = 9600
-rs485.serial.bytesize = 8
-rs485.serial.stopbits = 1
-rs485.serial.timeout = 5
 
 
 class rsReader(object):
+	defaults = {
+	'port': '/dev/ttyUSB0',
+	'devicenumber': 1,
+	'baudrate': 9600,
+	'bytesize': 8,
+	'stopbits': 8,
+	'timeout': 5,
+	}
+
+	def __init__(self, **kwargs):
+		config = {}
+        config.update(self.defaults)
+        config.update(kwargs)
+
+		#init rs485 
+		rs485 = minimalmodbus.Instrument( config['port'], config['devicenumber'])
+		rs485.mode =  minimalmodbus.MODE_RTU
+		rs485.serial.parity =  minimalmodbus.serial.PARITY_NONE
+		#rs485.debug = Config.get('rs485', 'debug')
+		rs485.serial.baudrate = config['baudrate']
+		rs485.serial.bytesize = config['bytesize']
+		rs485.serial.stopbits = config['stopbits']
+		rs485.serial.timeout = config['timeout']
+
+
 	def readRS485(self):
 		bodyTemplate_solar = 'emeter_solar,eqid={eqid},type={type} value={value}\n'
 		''' read DSM120 powermeter over rs485 '''
