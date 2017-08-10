@@ -4,10 +4,18 @@ from rs485.rs485 import rsReader
 
 import logging 
 import sys,getopt
+import ConfigParser
 
+#logging
 logging.basicConfig(level=logging.INFO)
 log = logging.getLogger(__name__)
 log.info('Starting..')
+
+#config
+Config = ConfigParser.ConfigParser()
+Config.readfp(open('config.ini'))
+Config.read('config.ini')
+
 
 
 meter = SmartMeter('/dev/ttyAMA0', baudrate=115200)
