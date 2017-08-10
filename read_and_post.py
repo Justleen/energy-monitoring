@@ -19,7 +19,7 @@ Config.read('config.ini')
 
 
 meter = SmartMeter('/dev/ttyAMA0', baudrate=115200)
-solar = rsReader()
+solar = rsReader(device=Config.get('rs485', 'device'), baudrate=Config.get('rs485', 'baudrate') )
 
 def passPacketOn(packet, poster):
 	eqid = str(packet['kwh']['eid']).decode('hex')

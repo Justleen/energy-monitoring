@@ -8,7 +8,7 @@ log = logging.getLogger(__name__)
 
 class rsReader(object):
 	defaults = {
-	'port': '/dev/ttyUSB0',
+	'device': '/dev/ttyUSB0',
 	'devicenumber': 1,
 	'baudrate': 9600,
 	'bytesize': 8,
@@ -22,7 +22,7 @@ class rsReader(object):
         	config.update(kwargs)
 
 		#init rs485 
-		self.rs485 = minimalmodbus.Instrument( config['port'], config['devicenumber'])
+		self.rs485 = minimalmodbus.Instrument( config['device'], config['devicenumber'])
 		self.rs485.mode =  minimalmodbus.MODE_RTU
 		self.rs485.serial.parity =  minimalmodbus.serial.PARITY_NONE
 		#rs485.debug = Config.get('rs485', 'debug')
