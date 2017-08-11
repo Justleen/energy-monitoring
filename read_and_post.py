@@ -19,7 +19,7 @@ Config.read('config.ini')
 
 
 meter = SmartMeter(
-					device=Config.get('smeter', 'device'), 
+					Config.get('smeter', 'device'), 
 					baudrate=Config.get('smeter', 'baudrate')
 				)
 
