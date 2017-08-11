@@ -2,21 +2,31 @@ import ssl
 from httplib import HTTPSConnection
 import logging
 
+import ConfigParser
+
+#logging
+log = logging.getLogger(__name__)
+
+#config
+Config = ConfigParser.ConfigParser()
+Config.readfp(open('config.ini'))
+Config.read('config.ini')
+
+
 
 
 log = logging.getLogger(__name__)
 
 class post(object):
 	def __init__(self, password):
-		self.host 		= 'monitoring.aardehuis.nl'
-		self.port 		= 8086
-		self.wachtwoord 	= password
-		self.username	= 'leen'
-		self.dbname 		= 'db_name'
-		self.context = ssl._create_unverified_context()
-		self.headers = {'Content-type': 'application/x-www-form-urlencoded','Accept': 'text/plain'}
+		self.host 			= Config.get('influx', 'influxHost')
+		self.port 			= Config.get('influx', 'port')
+		self.wachtwoord 	= Config.get('influx', 'wachtwoord')
+		self.username		= Config.get('influx', 'username')
+		self.dbname 		= Config.get('influx', 'dbname')
+		self.context 		= ssl._create_unverified_context()
+		self.headers 		= {'Content-type': 'application/x-www-form-urlencoded','Accept': 'text/plain'}
 
-	
 	def httpsPost(self, body):
 		conn = HTTPSConnection(self.host,self.port,context=self.context)
 		#conn.set_debuglevel(1)

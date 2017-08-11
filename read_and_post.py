@@ -18,8 +18,15 @@ Config.read('config.ini')
 
 
 
-meter = SmartMeter('/dev/ttyAMA0', baudrate=115200)
-solar = rsReader(device=Config.get('rs485', 'device'), baudrate=Config.get('rs485', 'baudrate') )
+meter = SmartMeter(
+					device=Config.get('smeter', 'device'), 
+					baudrate=Config.get('smeter', 'baudrate')
+				)
+
+solar = rsReader(
+					device=Config.get('rs485', 'device'),
+					baudrate=Config.get('rs485', 'baudrate')
+				)
 
 def passPacketOn(packet, poster):
 	eqid = str(packet['kwh']['eid']).decode('hex')
@@ -46,33 +53,17 @@ def passPacketOn(packet, poster):
 
 	poster.httpsPost(body)
 
-def run(password):
-	poster = post(password)
-	try:
-		packet = meter.read_one_packet()
-		passPacketOn(packet, poster)
-	except P1PacketError:
-		log.info('invalid checksum, pass')
-		pass
-
-	poster.httpsPost(solar.readRS485())
-
-
-
-def main(argv):
-	try:
-		opts, args = getopt.getopt(argv,"hi:o:",["password="])
-	except getopt.GetoptError:
-		print 'test.py -p  --password <password>'
-		sys.exit(2)
-	for opt, arg in opts:
-		if opt == '-h':
-			print 'test.py -p  --password <password>'
-         		sys.exit()
-		elif opt in ("-p", "--password"):
-       			password = arg
+def main():
 	while True:
-		run(password)
+		poster = post()
+		try:
+			packet = meter.read_one_packet()
+			passPacketOn(packet, poster)
+		except P1PacketError:
+			log.info('invalid checksum, pass')
+			pass
+
+		poster.httpsPost(solar.readRS485())
 
 if __name__ == "__main__":
-   main(sys.argv[1:])
+   main()
