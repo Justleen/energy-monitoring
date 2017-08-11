@@ -19,11 +19,11 @@ log = logging.getLogger(__name__)
 
 class post(object):
 	def __init__(self):
-		self.host 			= Config.get('influx', 'influxHost')
-		self.port 			= Config.get('influx', 'port')
-		self.wachtwoord 	= Config.get('influx', 'wachtwoord')
-		self.username		= Config.get('influx', 'username')
-		self.dbname 		= Config.get('influx', 'dbname')
+		self.host 			= Config.get('influxdb', 'influxHost')
+		self.port 			= Config.get('influxdb', 'port')
+		self.wachtwoord 	= Config.get('influxdb', 'wachtwoord')
+		self.username		= Config.get('influxdb', 'username')
+		self.dbname 		= Config.get('influxdb', 'dbname')
 		self.context 		= ssl._create_unverified_context()
 		self.headers 		= {'Content-type': 'application/x-www-form-urlencoded','Accept': 'text/plain'}
 
