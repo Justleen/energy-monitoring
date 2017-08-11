@@ -18,7 +18,7 @@ Config.read('config.ini')
 log = logging.getLogger(__name__)
 
 class post(object):
-	def __init__(self, password):
+	def __init__(self):
 		self.host 			= Config.get('influx', 'influxHost')
 		self.port 			= Config.get('influx', 'port')
 		self.wachtwoord 	= Config.get('influx', 'wachtwoord')
