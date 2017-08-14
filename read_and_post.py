@@ -13,15 +13,11 @@ log.info('Starting..')
 
 #config
 Config = ConfigParser.ConfigParser()
-Config.readfp(open('config.ini'))
 Config.read('config.ini')
 
 
 
-meter = SmartMeter(
-					Config.get('smeter', 'device'), 
-					baudrate=Config.get('smeter', 'baudrate')
-				)
+meter = SmartMeter( Config.get('smeter', 'device'), **dict(Config.items('smeter')) )
 
 solar = rsReader(
 					device=Config.get('rs485', 'device'),
