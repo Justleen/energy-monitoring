@@ -26,7 +26,8 @@ class SmartMeter(object):
         log.debug('Open serial connect to {} with: {}'.format(port, ', '.join('{}={}'.format(key, value) for key, value in config.items())))
 
         try:
-            self.serial = serial.Serial(port, **config)
+            port = '/dev/ttyAMA0'
+            self.serial = serial.Serial(port,  **dict(Config.items('smeter') ))
         except (serial.SerialException,OSError) as e:
             raise SmartMeterError(e)
         else:
