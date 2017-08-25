@@ -28,9 +28,17 @@ class post(object):
 		self.headers 		= {'Content-type': 'application/x-www-form-urlencoded','Accept': 'text/plain'}
 
 	def httpsPost(self, body):
-		conn = HTTPSConnection(self.host,self.port,context=self.context)
-		#conn.set_debuglevel(1)
-		conn.request('POST', '/write?db={db}&u={user}&p={password}'.format(db=self.dbname, user=self.username, password=self.wachtwoord), body, self.headers) 
+		try:
+			conn = HTTPSConnection(self.host,self.port,context=self.context)
+			#conn.set_debuglevel(1)
+			conn.request('POST', '/write?db={db}&u={user}&p={password}'.format(db=self.dbname, user=self.username, password=self.wachtwoord), body, self.headers) 
+		except as e:
+			raise HTTPERROR(e)
+			log.info("couldn't post to https: %s", e )
+
 		response = conn.getresponse()
 		log.info('Updated Influx. HTTP response {}'.format(response.status))
-		conn.close()
+		conn.close()     
+
+class HTTPERROR(Exception):
+	pass
