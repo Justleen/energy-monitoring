@@ -26,10 +26,10 @@ class rsReader(object):
 		self.rs485.mode =  minimalmodbus.MODE_RTU
 		self.rs485.serial.parity =  minimalmodbus.serial.PARITY_NONE
 		#rs485.debug = Config.get('rs485', 'debug')
-		self.rs485.serial.baudrate = config['baudrate']
-		self.rs485.serial.bytesize = config['bytesize']
-		self.rs485.serial.stopbits = config['stopbits']
-		self.rs485.serial.timeout = config['timeout']
+		self.rs485.serial.baudrate = int(config['baudrate'])
+		self.rs485.serial.bytesize = int(config['bytesize'])
+		self.rs485.serial.stopbits = int(config['stopbits'])
+		self.rs485.serial.timeout = int(config['timeout'])
 
 
 	def readRS485(self ):
