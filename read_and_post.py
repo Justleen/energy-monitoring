@@ -20,11 +20,10 @@ Config.read('config.ini')
 meter = SmartMeter( Config.get('smeter', 'device'), baudrate = Config.get('smeter', 'baudrate') )
 
 solar = rsReader(
-					device=Config.get('rs485', 'device'),
-					baudrate=Config.get('rs485', 'baudrate')
+					 **dict(Config.items('rs485'))
 				)
 
-def passPacketOn(packet, poster):
+def postBodyCreate(packet, poster):
 	eqid = str(packet['kwh']['eid']).decode('hex')
 	tariff = packet['kwh']['tariff']
 
@@ -54,7 +53,7 @@ def main():
 		poster = post()
 		try:
 			packet = meter.read_one_packet()
-			passPacketOn(packet, poster)
+			postBodyCreate(packet, poster)
 		except P1PacketError:
 			log.info('invalid checksum, pass')
 			pass
