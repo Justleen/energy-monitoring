@@ -20,7 +20,7 @@ Config.read('config.ini')
 meter = SmartMeter( Config.get('smeter', 'device'), baudrate = Config.get('smeter', 'baudrate') )
 
 solar = rsReader(
-					 **dict(Config.items('rs485'))
+					 **Config.items('rs485')
 				)
 
 def postBodyCreate(packet, poster):
