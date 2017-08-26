@@ -7,7 +7,7 @@ import sys,getopt
 import ConfigParser
 
 #logging
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.DEBUG)
 log = logging.getLogger(__name__)
 log.info('Starting..')
 
@@ -17,7 +17,7 @@ Config.read('config.ini')
 
 
 
-meter = SmartMeter( Config.get('smeter', 'device'), **dict(Config.items('smeter')) )
+meter = SmartMeter( Config.get('smeter', 'device'), baudrate = Config.get('smeter', 'baudrate') )
 
 solar = rsReader(
 					device=Config.get('rs485', 'device'),
