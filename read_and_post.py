@@ -17,7 +17,7 @@ Config.read('config.ini')
 
 
 
-meter = SmartMeter( Config.get('smeter', 'device'), dict(Config.items('smeter')) )
+meter = SmartMeter( Config.get('smeter', 'device'), **dict(Config.items('smeter')) )
 
 solar = rsReader(
 					device=Config.get('rs485', 'device'),
