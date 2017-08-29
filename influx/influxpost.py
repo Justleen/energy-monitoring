@@ -33,12 +33,13 @@ class post(object):
 			#conn.set_debuglevel(1)
 			conn.request('POST', '/write?db={db}&u={user}&p={password}'.format(db=self.dbname, user=self.username, password=self.wachtwoord), body, self.headers) 
 		except Exception as e:
-			raise HTTPERROR(e)
+			raise influxPostError(e)
 			log.info("couldn't post to https: %s", e )
 
 		response = conn.getresponse()
+		log.debug(body)
 		log.info('Updated Influx. HTTP response {}'.format(response.status))
 		conn.close()     
 
-class HTTPERROR(Exception):
+class influxPostError(Exception):
 	pass

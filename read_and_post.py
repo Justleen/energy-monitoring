@@ -1,5 +1,5 @@
 from smeterd.meter import SmartMeter,P1PacketError
-from influx.influxpost import post
+from influx.influxpost import post, influxPostError
 from rs485.rs485 import rsReader
 
 import logging 
@@ -11,7 +11,7 @@ Config = ConfigParser.ConfigParser()
 Config.read('config.ini')
 
 #logging
-numeric_level = getattr(logging, Config.get('logging', 'level').upper(), 10)
+numeric_level = getattr(logging, Config.get('logging', 'level').upper(), 10) #convert log level to numeric loglevel
 logging.basicConfig(level=numeric_level)
 log = logging.getLogger(__name__)
 log.info('Starting..')
@@ -58,7 +58,11 @@ def main():
 			log.info('invalid checksum, pass')
 			pass
 
-		poster.httpsPost(solar.readRS485())
+		try:
+			poster.httpsPost(solar.readRS485())
+		except influxPostError:
+			log.info('influx posting went wrong')
+			pass
 
 if __name__ == "__main__":
    main()
