@@ -6,15 +6,15 @@ import logging
 import sys,getopt
 import ConfigParser
 
-#logging
-logging.basicConfig(level=logging.DEBUG)
-log = logging.getLogger(__name__)
-log.info('Starting..')
-
 #config
 Config = ConfigParser.ConfigParser()
 Config.read('config.ini')
 
+#logging
+numeric_level = getattr(logging, Config.get('logging', 'level').upper(), 10)
+logging.basicConfig(level=numeric_level)
+log = logging.getLogger(__name__)
+log.info('Starting..')
 
 
 meter = SmartMeter( Config.get('smeter', 'device'), baudrate = Config.get('smeter', 'baudrate') )
