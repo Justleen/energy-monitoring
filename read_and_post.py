@@ -47,19 +47,20 @@ def postBodyCreate(packet, poster):
 	body += bodyTemplate_power.format( dir='out', tarif=tariff, phase='total', value=packet['kwh']['current_produced'] )
 
 	poster.httpsPost(body)
+	return eqid
 
 def main():
 	while True:
 		poster = post()
 		try:
 			packet = meter.read_one_packet()
-			postBodyCreate(packet, poster)
+			eqid = postBodyCreate(packet, poster)
 		except P1PacketError:
 			log.info('invalid checksum, pass')
 			pass
 
 		try:
-			poster.httpsPost(solar.readRS485())
+			poster.httpsPost(solar.readRS485(), eqid)
 		except influxPostError:
 			log.info('influx posting went wrong')
 			pass

@@ -8,6 +8,7 @@ log = logging.getLogger(__name__)
 
 class rsReader(object):
 	defaults = {
+	'eqid' : None
 	'device': '/dev/ttyUSB0',
 	'devicenumber': 1,
 	'baudrate': 9600,
@@ -47,7 +48,7 @@ class rsReader(object):
 			ret['sol_nrg'] = abs(float(TotalPower))
 
 			log.debug('Values read: %s and %s',  ret['sol_pow'] , ret['sol_nrg'] ) 
-			self.body  = bodyTemplate_solar.format(eqid='E0005001501964013',type='cumulative', value=ret['sol_nrg'])
-			self.body += bodyTemplate_solar.format(eqid='E0005001501964013',type='instant', value=ret['sol_pow'])
+			self.body  = bodyTemplate_solar.format(eqid=config['eqid'],type='cumulative', value=ret['sol_nrg'])
+			self.body += bodyTemplate_solar.format(eqid=config['eqid'],type='instant', value=ret['sol_pow'])
 
 		return self.body
