@@ -8,7 +8,7 @@ log = logging.getLogger(__name__)
 
 class rsReader(object):
 	defaults = {
-	'eqid' : None
+	'eqid' : None,
 	'device': '/dev/ttyUSB0',
 	'devicenumber': 1,
 	'baudrate': 9600,
