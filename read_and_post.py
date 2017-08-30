@@ -60,7 +60,7 @@ def main():
 			pass
 
 		try:
-			poster.httpsPost(solar.readRS485(eqid=eqid) )
+			poster.httpsPost(solar.readRS485(eqid) )
 		except influxPostError:
 			log.info('influx posting went wrong')
 			pass
