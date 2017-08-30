@@ -1,6 +1,6 @@
 from smeterd.meter import SmartMeter,P1PacketError
 from influx.influxpost import post, influxPostError
-from rs485.rs485 import rsReader
+from rs485.rs485 import rsReader,EqidError
 
 import logging 
 import sys,getopt
@@ -63,6 +63,9 @@ def main():
 			poster.httpsPost(solar.readRS485(eqid) )
 		except influxPostError:
 			log.info('influx posting went wrong')
+			pass
+		except EqidError:
+			log.info('geen Equipment ID voor rs485')
 			pass
 
 if __name__ == "__main__":
