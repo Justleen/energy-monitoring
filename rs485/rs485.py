@@ -31,7 +31,12 @@ class rsReader(object):
 		self.rs485.serial.bytesize = int(config['bytesize'])
 		self.rs485.serial.stopbits = int(config['stopbits'])
 		self.rs485.serial.timeout = int(config['timeout'])
+<<<<<<< HEAD
 		self.eqid = config['eqid']
+=======
+		self.eqid=config['eqid']
+
+>>>>>>> 3d0d6c302f08aa6779446d12c04e00a53650f359
 
 	def readRS485(self ):
 		bodyTemplate_solar = 'emeter_solar,eqid={eqid},type={type} value={value}\n'
