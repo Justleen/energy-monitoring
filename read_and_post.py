@@ -87,7 +87,6 @@ def main():
 		except EqidError:
 			log.info('geen Equipment ID voor rs485')
 			pass
-		except IOE
 
 if __name__ == "__main__":
    main()
