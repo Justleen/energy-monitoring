@@ -53,13 +53,17 @@ def p1PostPacket(packet, poster):
 def solarPostPacket(packet, poster, eqid):
 	bodyTemplate_solar = 'emeter_solar,eqid={eqid},type={type} value={value}\n'
 	body = ''
-	log.debug('Solar values read: %s and %s',  packet['sol_pow'] , packet['sol_nrg'] ) 
-	body  = bodyTemplate_solar.format(eqid=eqid,type='cumulative', value=packet['sol_nrg'])
-	body += bodyTemplate_solar.format(eqid=eqid,type='instant', value=packet['sol_pow'])
-	
-	poster.httpsPost(body)
+	if packet['sol_pow'] and packet['sol_nrg']:
+		log.debug('Solar values read: %s and %s',  packet['sol_pow'] , packet['sol_nrg'] ) 
+		body  = bodyTemplate_solar.format(eqid=eqid,type='cumulative', value=packet['sol_nrg'])
+		body += bodyTemplate_solar.format(eqid=eqid,type='instant', value=packet['sol_pow'])
+
+		poster.httpsPost(body)
+	else:
+		log.info('Niet alle waarden van Solar! Skipping')
 
 def main():
+	global eqid
 	while True:
 		poster = post()
 
@@ -83,6 +87,7 @@ def main():
 		except EqidError:
 			log.info('geen Equipment ID voor rs485')
 			pass
+		except IOE
 
 if __name__ == "__main__":
    main()
