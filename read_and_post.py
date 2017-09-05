@@ -53,14 +53,15 @@ def p1PostPacket(packet, poster):
 def solarPostPacket(packet, poster, eqid):
 	bodyTemplate_solar = 'emeter_solar,eqid={eqid},type={type} value={value}\n'
 	body = ''
-	if packet['sol_pow'] and packet['sol_nrg']:
+	try:
 		log.debug('Solar values read: %s and %s',  packet['sol_pow'] , packet['sol_nrg'] ) 
 		body  = bodyTemplate_solar.format(eqid=eqid,type='cumulative', value=packet['sol_nrg'])
 		body += bodyTemplate_solar.format(eqid=eqid,type='instant', value=packet['sol_pow'])
 
 		poster.httpsPost(body)
-	else:
+	except KeyError:
 		log.info('Niet alle waarden van Solar! Skipping')
+		pass
 
 def main():
 	global eqid
