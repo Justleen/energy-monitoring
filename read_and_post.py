@@ -23,7 +23,7 @@ solar = rsReader(
 					 **dict(Config.items('rs485'))
 				)
 
-def postBodyCreate(packet, poster):
+def p1PostPacket(packet, poster):
 	eqid = str(packet['kwh']['eid']).decode('hex')
 	tariff = packet['kwh']['tariff']
 
@@ -45,22 +45,36 @@ def postBodyCreate(packet, poster):
 	body += bodyTemplate_power.format( dir='out', tarif=tariff, phase='L2', value=packet['kwh']['current_produced_phaseTwo'] )
 	body += bodyTemplate_power.format( dir='out', tarif=tariff, phase='L3', value=packet['kwh']['current_produced_phaseThree'] )
 	body += bodyTemplate_power.format( dir='out', tarif=tariff, phase='total', value=packet['kwh']['current_produced'] )
-
+	
 	poster.httpsPost(body)
+
 	return eqid
+
+def solarPostPacket(packet, poster, eqid):
+	log.debug('Solar values read: %s and %s',  packet['sol_pow'] , packet['sol_nrg'] ) 
+	body  = bodyTemplate_solar.format(eqid=eqid,type='cumulative', value=packet['sol_nrg'])
+	body += bodyTemplate_solar.format(eqid=eqid,type='instant', value=packet['sol_pow'])
+	
+	poster.httpsPost(body)
 
 def main():
 	while True:
 		poster = post()
+
 		try:
-			packet = meter.read_one_packet()
-			eqid = postBodyCreate(packet, poster)
+			smeter_packet = meter.read_one_packet()
+			eqid = p1PostPacket(smeter_packet, poster)
+
+
 		except P1PacketError:
 			log.info('invalid checksum, pass')
 			pass
 
+
 		try:
-			poster.httpsPost(solar.readRS485(eqid) )
+			solar_packet =  solar.readRS485(eqid)
+			solarPostPacket(solar_packet, poster, eqid)
+
 		except influxPostError:
 			log.info('influx posting went wrong')
 			pass
