@@ -51,6 +51,8 @@ def p1PostPacket(packet, poster):
 	return eqid
 
 def solarPostPacket(packet, poster, eqid):
+	bodyTemplate_solar = 'emeter_solar,eqid={eqid},type={type} value={value}\n'
+	body = ''
 	log.debug('Solar values read: %s and %s',  packet['sol_pow'] , packet['sol_nrg'] ) 
 	body  = bodyTemplate_solar.format(eqid=eqid,type='cumulative', value=packet['sol_nrg'])
 	body += bodyTemplate_solar.format(eqid=eqid,type='instant', value=packet['sol_pow'])

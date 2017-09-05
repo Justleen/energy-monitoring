@@ -37,7 +37,6 @@ class rsReader(object):
 			log.info('Geen Equipment ID beschikbaar!')
 			raise EqidError('No Eqid found! ')
 		else:	
-			bodyTemplate_solar = 'emeter_solar,eqid={eqid},type={type} value={value}\n'
 			''' read DSM120 powermeter over rs485 '''
 			ret = {}
 			try:
