@@ -38,7 +38,7 @@ class post(object):
 
 		response = conn.getresponse()
 		log.debug(body)
-		log.info('Updated Influx. HTTP response {}'.format(response.status))
+		log.debug('Updated Influx. HTTP response {}'.format(response.status))
 		conn.close()     
 
 class influxPostError(Exception):
