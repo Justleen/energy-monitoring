@@ -37,7 +37,7 @@ class post(object):
 			conn.request('POST', '/write?db={db}&u={user}&p={password}'.format(db=self.dbname, user=self.username, password=self.wachtwoord), body, self.headers) 
 		except socket.error as e:
 			print(e)
-			print("oops socket errors! I'll pass")
+			log.info("oops socket errors! I'll pass")
 			pass
 		except Exception as e:
 			raise influxPostError(e)
