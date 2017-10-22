@@ -33,7 +33,7 @@ class post(object):
 	def httpsPost(self, body):
 		try:
 			conn = HTTPSConnection(self.host,self.port,context=self.context)
-			conn.set_debuglevel(1)
+			#conn.set_debuglevel(1)
 			conn.request('POST', '/write?db={db}&u={user}&p={password}'.format(db=self.dbname, user=self.username, password=self.wachtwoord), body, self.headers) 
 		except socket.error as e:
 			print(e)
