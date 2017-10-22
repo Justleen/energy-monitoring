@@ -4,6 +4,9 @@ import logging
 
 import ConfigParser
 
+import socket
+socket.setdefaulttimeout(1)
+
 #logging
 log = logging.getLogger(__name__)
 
@@ -30,15 +33,19 @@ class post(object):
 	def httpsPost(self, body):
 		try:
 			conn = HTTPSConnection(self.host,self.port,context=self.context)
-			#conn.set_debuglevel(1)
+			conn.set_debuglevel(1)
 			conn.request('POST', '/write?db={db}&u={user}&p={password}'.format(db=self.dbname, user=self.username, password=self.wachtwoord), body, self.headers) 
+		except socket.error as e:
+			print(e)
+			print("oops socket errors! I'll pass")
+			pass
 		except Exception as e:
 			raise influxPostError(e)
 			log.info("couldn't post to https: %s", e )
-
-		response = conn.getresponse()
-		log.debug(body)
-		log.debug('Updated Influx. HTTP response {}'.format(response.status))
+		else:
+			response = conn.getresponse()
+			log.debug(body)
+			log.debug('Updated Influx. HTTP response {}'.format(response.status))
 		conn.close()     
 
 class influxPostError(Exception):
