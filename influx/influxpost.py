@@ -34,7 +34,7 @@ class post(object):
 	def httpsPost(self, body):
 		try:
 			conn = HTTPSConnection(self.host,self.port,context=self.context)
-			conn.set_debuglevel(numeric_level)
+			#conn.set_debuglevel(1)
 			conn.request('POST', '/write?db={db}&u={user}&p={password}'.format(db=self.dbname, user=self.username, password=self.wachtwoord), body, self.headers) 
 			response = conn.getresponse()
 			log.debug(body)
