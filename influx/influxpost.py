@@ -7,14 +7,15 @@ import ConfigParser
 import socket
 socket.setdefaulttimeout(1)
 
-#logging
-log = logging.getLogger(__name__)
 
 #config
 Config = ConfigParser.ConfigParser()
 Config.readfp(open('config.ini'))
 Config.read('config.ini')
 
+#logging
+numeric_level = getattr(logging, Config.get('logging', 'level').upper(), 10) #convert log level to numeric loglevel
+log = logging.getLogger(__name__)
 
 
 
@@ -33,11 +34,11 @@ class post(object):
 	def httpsPost(self, body):
 		try:
 			conn = HTTPSConnection(self.host,self.port,context=self.context)
-			#conn.set_debuglevel(1)
+			conn.set_debuglevel(numeric_level)
 			conn.request('POST', '/write?db={db}&u={user}&p={password}'.format(db=self.dbname, user=self.username, password=self.wachtwoord), body, self.headers) 
 			response = conn.getresponse()
 			log.debug(body)
-			log.debug('Updated Influx. HTTP response {}'.format(response.status))
+			log.info('Updated Influx. HTTP response {}'.format(response.status))
 		except socket.error as e:
 			print(e)
 			log.error("oops socket errors! I'll pass")
