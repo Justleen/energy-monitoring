@@ -3,18 +3,19 @@ from httplib import HTTPSConnection
 import logging
 
 import ConfigParser
-
+import os 
+dir_path = os.path.dirname(os.path.realpath(__file__))
 import socket
+
 socket.setdefaulttimeout(1)
 
 
 #config
 Config = ConfigParser.ConfigParser()
-Config.readfp(open('config.ini'))
-Config.read('config.ini')
+Config.readfp(open( dir_path.replace('influx','') + '/config.ini'))
+Config.read('../config.ini')
 
 #logging
-numeric_level = getattr(logging, Config.get('logging', 'level').upper(), 10) #convert log level to numeric loglevel
 log = logging.getLogger(__name__)
 
 

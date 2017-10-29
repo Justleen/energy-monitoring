@@ -5,10 +5,12 @@ from rs485.rs485 import rsReader,EqidError
 import logging 
 import sys,getopt
 import ConfigParser
+import os 
+dir_path = os.path.dirname(os.path.realpath(__file__))
 
 #config
 Config = ConfigParser.ConfigParser()
-Config.read('config.ini')
+Config.read( dir_path + '/config.ini')
 
 #logging
 numeric_level = getattr(logging, Config.get('logging', 'level').upper(), 10) #convert log level to numeric loglevel
