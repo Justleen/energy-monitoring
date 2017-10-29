@@ -3,18 +3,20 @@ from httplib import HTTPSConnection
 import logging
 
 import ConfigParser
-
+import os 
+dir_path = os.path.dirname(os.path.realpath(__file__))
 import socket
+
 socket.setdefaulttimeout(1)
 
-#logging
-log = logging.getLogger(__name__)
 
 #config
 Config = ConfigParser.ConfigParser()
-Config.readfp(open('config.ini'))
-Config.read('config.ini')
+Config.readfp(open( dir_path.replace('influx','') + '/config.ini'))
+Config.read('../config.ini')
 
+#logging
+log = logging.getLogger(__name__)
 
 
 
@@ -37,7 +39,7 @@ class post(object):
 			conn.request('POST', '/write?db={db}&u={user}&p={password}'.format(db=self.dbname, user=self.username, password=self.wachtwoord), body, self.headers) 
 			response = conn.getresponse()
 			log.debug(body)
-			log.debug('Updated Influx. HTTP response {}'.format(response.status))
+			log.info('Updated Influx. HTTP response {}'.format(response.status))
 		except socket.error as e:
 			print(e)
 			log.error("oops socket errors! I'll pass")
