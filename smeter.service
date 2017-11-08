@@ -1,0 +1,15 @@
+[Unit]
+Description=Smart Meter read en post
+After=syslog.target
+
+[Service]
+Type=simple
+User=root
+Group=root
+WorkingDirectory=/home/leen/git
+ExecStart=/usr/bin/python /home/leen/git/energy-monitoring/read_and_post.py
+StandardOutput=syslog
+StandardError=syslog
+
+[Install]
+WantedBy=multi-user.target
