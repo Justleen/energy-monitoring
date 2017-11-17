@@ -3,6 +3,9 @@
 sudo apt-get install python-serial python-crcmod python-pip
 sudo pip install MinimalModbus
 ```
+# enable service
+sudo cp smeter.service  /lib/systemd/system
+sudo systemctl enable smeter
 
 Create a config file config.ini, and set correct path/filename in script.
 # config example:
