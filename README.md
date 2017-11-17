@@ -1,7 +1,8 @@
-Install requirements:
+# Install requirements:
+```
 sudo apt-get install python-serial python-crcmod python-pip
 sudo pip install MinimalModbus
-
+```
 
 Create a config file config.ini, and set correct path/filename in script.
 # config example:
