@@ -66,7 +66,7 @@ def solarPostPacket(packet, poster, eqid):
 		pass
 
 def main():
-	global eqid
+	eqid="NOTSET"
 	while True:
 		poster = post()
 
@@ -80,14 +80,15 @@ def main():
 			pass
 
 
-		try:
-			solar_packet =  solar.readRS485(eqid)
+                if ( eqid != "NOTSET"):
+                    try:
+		        solar_packet =  solar.readRS485(eqid)
 			solarPostPacket(solar_packet, poster, eqid)
 
-		except influxPostError:
+                    except influxPostError:
 			log.info('influx posting went wrong')
 			pass
-		except EqidError:
+                    except EqidError:
 			log.info('geen Equipment ID voor rs485')
 			pass
 
