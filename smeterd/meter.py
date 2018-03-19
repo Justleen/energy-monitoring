@@ -2,7 +2,7 @@ import re
 import logging
 import serial
 import crcmod.predefined
-
+from sys import getsizeof
 
 log = logging.getLogger(__name__)
 crc16 = crcmod.predefined.mkPredefinedCrcFun('crc16')
@@ -91,6 +91,7 @@ class SmartMeter(object):
 
         log.info('Done reading one packet (containing %d lines)' % len(datagram.splitlines()))
         log.debug('Total lines read from serial port: %d', lines_read)
+        log.debug('Total bytes read from serial port: %d', getsizeof(datagram))
         log.debug('Constructing P1Packet from raw data')
 
         return P1Packet(datagram)
@@ -206,3 +207,4 @@ class P1Packet(object):
 
     def __str__(self):
         return self._datagram.decode('ascii')
+
